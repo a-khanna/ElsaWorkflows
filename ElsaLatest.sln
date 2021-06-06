@@ -7,7 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElsaLatest", "ElsaLatest\El
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElsaGuides.ContentApproval.Web", "ElsaGuides.ContentApproval.Web\ElsaGuides.ContentApproval.Web.csproj", "{24827C97-2F56-4FEB-8B87-89E0BF353E17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElsaLTS", "ElsaLTS\ElsaLTS.csproj", "{5802B34A-70A4-431F-BF66-855EECBEC66D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElsaLTS", "ElsaLTS\ElsaLTS.csproj", "{5802B34A-70A4-431F-BF66-855EECBEC66D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CDEC18C8-8794-4490-B56C-D8A78F6E0A79}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
+		workflow-definition-create-ticket.json = workflow-definition-create-ticket.json
+		workflow-definition-person-details.json = workflow-definition-person-details.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

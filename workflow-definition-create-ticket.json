@@ -1,0 +1,240 @@
+{
+  "$id": "1",
+  "definitionId": "0e346becfadb4ac68c953b75190a2731",
+  "versionId": "58574e55356d49d2b8e344da9a27e837",
+  "name": "CreateTicket",
+  "version": 6,
+  "variables": {
+    "$id": "2",
+    "data": {}
+  },
+  "customAttributes": {
+    "$id": "3",
+    "data": {}
+  },
+  "isSingleton": false,
+  "persistenceBehavior": "Suspended",
+  "deleteCompletedInstances": false,
+  "isPublished": true,
+  "isLatest": true,
+  "activities": [
+    {
+      "$id": "4",
+      "activityId": "aff56b0a-8b3b-4054-85cc-fe3c8ccd702d",
+      "type": "UserTask",
+      "name": "FirstLevelCategories",
+      "displayName": "FirstLevelCategories",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "persistOutput": false,
+      "properties": [
+        {
+          "$id": "5",
+          "name": "Actions",
+          "expressions": {
+            "$id": "6",
+            "Json": "[\"Admin\",\"IT\",\"HR\"]"
+          }
+        }
+      ]
+    },
+    {
+      "$id": "7",
+      "activityId": "cf1d2a63-3760-48f4-a67e-cd64b9c20103",
+      "type": "UserTask",
+      "name": "AdminSubTasks",
+      "displayName": "AdminSubTasks",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "persistOutput": false,
+      "properties": [
+        {
+          "$id": "8",
+          "name": "Actions",
+          "expressions": {
+            "$id": "9",
+            "Json": "[\"Housekeeping\",\"Move Assets\",\"Wellness\"]"
+          }
+        }
+      ]
+    },
+    {
+      "$id": "10",
+      "activityId": "85fc30cf-2bd0-4c69-8084-06e4b25b2a87",
+      "type": "UserTask",
+      "name": "ITSubTasks",
+      "displayName": "ITSubTasks",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "persistOutput": false,
+      "properties": [
+        {
+          "$id": "11",
+          "name": "Actions",
+          "expressions": {
+            "$id": "12",
+            "Json": "[\"Software\",\"Hardware\",\"Permissions\"]"
+          }
+        }
+      ]
+    },
+    {
+      "$id": "13",
+      "activityId": "e4dfcb21-5b59-4e7c-83da-8c2d52208d43",
+      "type": "UserTask",
+      "name": "HRSubTasks",
+      "displayName": "HRSubTasks",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "persistOutput": false,
+      "properties": [
+        {
+          "$id": "14",
+          "name": "Actions",
+          "expressions": {
+            "$id": "15",
+            "Json": "[\"Payroll\",\"Expense Settlement\",\"Policies\"]"
+          }
+        }
+      ]
+    },
+    {
+      "$id": "16",
+      "activityId": "491c0cf1-e971-45d4-97b1-f5dff6a5e436",
+      "type": "Switch",
+      "displayName": "Switch",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "persistOutput": false,
+      "properties": [
+        {
+          "$id": "17",
+          "name": "Cases",
+          "expressions": {
+            "$id": "18",
+            "Switch": "[{\"name\":\"Admin\",\"syntax\":\"JavaScript\",\"expressions\":{\"JavaScript\":\"FirstLevelCategories.Output === 'Admin'\"}},{\"name\":\"IT\",\"syntax\":\"JavaScript\",\"expressions\":{\"JavaScript\":\"FirstLevelCategories.Output === 'IT'\"}},{\"name\":\"HR\",\"syntax\":\"JavaScript\",\"expressions\":{\"JavaScript\":\"FirstLevelCategories.Output === 'HR'\"}}]"
+          }
+        },
+        {
+          "$id": "19",
+          "name": "Mode",
+          "expressions": {
+            "$id": "20"
+          }
+        }
+      ]
+    },
+    {
+      "$id": "21",
+      "activityId": "98934f08-c306-42d3-b3ee-6214ea8957e8",
+      "type": "SignalReceived",
+      "displayName": "Signal Received",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "persistOutput": false,
+      "properties": [
+        {
+          "$id": "22",
+          "name": "Signal",
+          "expressions": {
+            "$id": "23",
+            "Literal": "Create Ticket"
+          }
+        },
+        {
+          "$id": "24",
+          "name": "Scope",
+          "expressions": {
+            "$id": "25"
+          }
+        }
+      ]
+    },
+    {
+      "$id": "26",
+      "activityId": "6725e076-e3f6-4a12-9ee1-4b7357dfdf83",
+      "type": "UserInputTask",
+      "name": "GetTicketDetails",
+      "displayName": "GetTicketDetails",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "persistOutput": false,
+      "properties": [
+        {
+          "$id": "27",
+          "name": "RequiredFields",
+          "expressions": {
+            "$id": "28",
+            "Json": "[\"title\",\"description\"]"
+          }
+        },
+        {
+          "$id": "29",
+          "name": "Actions",
+          "expressions": {
+            "$id": "30",
+            "Json": "[\"TicketDetails\"]"
+          }
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "$id": "31",
+      "sourceActivityId": "aff56b0a-8b3b-4054-85cc-fe3c8ccd702d",
+      "targetActivityId": "491c0cf1-e971-45d4-97b1-f5dff6a5e436",
+      "outcome": "Done"
+    },
+    {
+      "$id": "32",
+      "sourceActivityId": "491c0cf1-e971-45d4-97b1-f5dff6a5e436",
+      "targetActivityId": "cf1d2a63-3760-48f4-a67e-cd64b9c20103",
+      "outcome": "Admin"
+    },
+    {
+      "$id": "33",
+      "sourceActivityId": "491c0cf1-e971-45d4-97b1-f5dff6a5e436",
+      "targetActivityId": "85fc30cf-2bd0-4c69-8084-06e4b25b2a87",
+      "outcome": "IT"
+    },
+    {
+      "$id": "34",
+      "sourceActivityId": "491c0cf1-e971-45d4-97b1-f5dff6a5e436",
+      "targetActivityId": "e4dfcb21-5b59-4e7c-83da-8c2d52208d43",
+      "outcome": "HR"
+    },
+    {
+      "$id": "35",
+      "sourceActivityId": "98934f08-c306-42d3-b3ee-6214ea8957e8",
+      "targetActivityId": "aff56b0a-8b3b-4054-85cc-fe3c8ccd702d",
+      "outcome": "Done"
+    },
+    {
+      "$id": "36",
+      "sourceActivityId": "cf1d2a63-3760-48f4-a67e-cd64b9c20103",
+      "targetActivityId": "6725e076-e3f6-4a12-9ee1-4b7357dfdf83",
+      "outcome": "Done"
+    },
+    {
+      "$id": "37",
+      "sourceActivityId": "85fc30cf-2bd0-4c69-8084-06e4b25b2a87",
+      "targetActivityId": "6725e076-e3f6-4a12-9ee1-4b7357dfdf83",
+      "outcome": "Done"
+    },
+    {
+      "$id": "38",
+      "sourceActivityId": "e4dfcb21-5b59-4e7c-83da-8c2d52208d43",
+      "targetActivityId": "6725e076-e3f6-4a12-9ee1-4b7357dfdf83",
+      "outcome": "Done"
+    }
+  ],
+  "id": "58574e55356d49d2b8e344da9a27e837"
+}

@@ -1,9 +1,13 @@
-Run Elsa.Latest for v2.0
-Run Elsa.LTS for v1.5
+Elsa.Latest => v2.0<br>Elsa.LTS => v1.5 (archived)
 
-Replace the SQL Server connection string in `appsettings.json`
+### How to run Elsa.Latest:
+1. Replace the SQL Server connection string in `appsettings.json`
+2. Run the project
+3. Import the given workflows on the UI.
+4. Open `https://localhost:5001/swagger` and use `Boss` endpoints to control the workflow.
 
-In v2.0, in order to run customized frontend:
+### Customizing UI
+In order to run customized frontend:
 1. Build the elsa-workflow-studio from Elsa's repository.
 2. Create a `wwwroot` folder in the Elsa.Latest project.
 3. Paste the `elsa-worflow-studio` folder generated in step 1, inside the `wwwroot` folder.
