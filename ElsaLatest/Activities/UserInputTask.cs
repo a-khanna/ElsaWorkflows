@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Elsa;
 using Elsa.Activities.UserTask.Activities;
 using Elsa.ActivityResults;
@@ -7,6 +9,7 @@ using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
+using ElsaLatest.Models;
 
 namespace ElsaLatest.Activities
 {
@@ -29,9 +32,18 @@ namespace ElsaLatest.Activities
         {
         }
 
+        protected override bool OnCanExecute(ActivityExecutionContext context)
+        {
+            var userInput = context.Input! as UserInput;
+            return Actions.Contains(userInput.UserAction, StringComparer.OrdinalIgnoreCase);
+        }
+
+        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context) => Suspend();
+
         protected override IActivityExecutionResult OnResume(ActivityExecutionContext context)
         {
-            return Done(1234567);
+            var userInput = context.Input! as UserInput;
+            return Outcome(userInput.UserAction, userInput.Data);
         }
     }
 }

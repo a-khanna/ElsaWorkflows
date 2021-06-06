@@ -68,11 +68,20 @@ namespace ElsaLatest.Controllers
 
             var currentActivityId = workflowInstance?.BlockingActivities.Select(i => i.ActivityId).First();
 
-            var workflowDefinition = await _workflowDefinitionStore.FindAsync(new WorkflowDefinitionIdSpecification(workflowInstance.DefinitionId));
+            var workflowDefinition = await _workflowDefinitionStore.FindAsync(new WorkflowDefinitionIdSpecification(workflowInstance.DefinitionId).WithVersionOptions(VersionOptions.Latest));
             var activityDefinition = workflowDefinition.Activities.First(a => a.ActivityId == currentActivityId);
-            var userTaskValues = activityDefinition.Properties.ElementAt(0).Expressions["Json"];
 
-            response.Data = userTaskValues;
+            object taskValues = null;
+            if (activityDefinition.Type == "UserTask")
+                taskValues = activityDefinition.Properties.ElementAt(0).Expressions["Json"];
+            else
+                taskValues = new
+                {
+                    RequiredFields = activityDefinition.Properties.First(p => p.Name == "RequiredFields").Expressions["Json"],
+                    Actions = activityDefinition.Properties.First(p => p.Name == "Actions").Expressions["Json"]
+                };
+
+            response.Data = taskValues;
 
             return Ok(response);
         }
@@ -92,11 +101,24 @@ namespace ElsaLatest.Controllers
             return Ok(response);
         }
 
-        [HttpGet("execute-step")]
-        public async Task<IActionResult> ExecuteStep(string instanceId, string userAction)
+        [HttpPost("execute-step")]
+        public async Task<IActionResult> ExecuteStep(UserInput userInput)
         {
-            var workflowInstance = await TriggerUserTask(userAction, instanceId);
-            return Ok(new BossResponse { InstanceId = instanceId, Status = workflowInstance.WorkflowStatus });
+            var workflowInstance = await _workflowInstanceStore.FindByIdAsync(userInput.InstanceId);
+            if (workflowInstance.WorkflowStatus is WorkflowStatus.Cancelled or WorkflowStatus.Faulted or WorkflowStatus.Finished)
+                return BadRequest("This instance is not active anymore");
+
+            if (!workflowInstance.BlockingActivities.Any())
+                return BadRequest("No blocked activities found to be executed in this instance.");
+
+            var currentActivity = workflowInstance?.BlockingActivities.Select(i => new { ActivityId = i.ActivityId, ActivityType = i.ActivityType }).First();
+
+            if (currentActivity.ActivityType == "UserTask")
+                await _workflowInterruptor.InterruptActivityAsync(workflowInstance, currentActivity.ActivityId, userInput.UserAction);
+            else
+                await _workflowInterruptor.InterruptActivityAsync(workflowInstance, currentActivity.ActivityId, userInput);
+
+            return Ok(new BossResponse { InstanceId = userInput.InstanceId, Status = workflowInstance.WorkflowStatus });
         }
 
         [HttpGet("cancel-flow")]
@@ -113,21 +135,6 @@ namespace ElsaLatest.Controllers
             await dbContext.SaveChangesAsync();
 
             return Ok($"Cancelled workflow with id {instanceId}.");
-        }
-
-        private async Task<WorkflowInstance> TriggerUserTask(string userAction, string instanceId = null, string correlationId = null)
-        {
-            WorkflowInstance workflowInstance;
-
-            if (!string.IsNullOrWhiteSpace(instanceId))
-                workflowInstance = await _workflowInstanceStore.FindByIdAsync(instanceId);
-            else
-                workflowInstance = await _workflowInstanceStore.FindByCorrelationIdAsync(correlationId);
-
-            var currentActivityId = workflowInstance?.BlockingActivities.Select(i => i.ActivityId).First();
-            await _workflowInterruptor.InterruptActivityAsync(workflowInstance, currentActivityId, userAction);
-
-            return workflowInstance;
         }
     }
 }
