@@ -42,6 +42,7 @@ namespace ElsaLatest
                     .AddActivity<GetLevel1Services>()
                     .AddActivity<GetLevel2Services>()
                     .AddActivity<GetTicketDetails>()
+                    .AddActivity<UserInputTask>()
                 );
 
             // Elsa API endpoints.
