@@ -47,41 +47,22 @@ namespace ElsaLatest.Controllers
             var instanceId = startedWorkflows.ElementAt(0).WorkflowInstanceId;
             var workflowInstance = await _workflowInstanceStore.FindByIdAsync(instanceId);
 
-            return Ok(new BossResponse
-            {
-                InstanceId = workflowInstance.Id,
-                Status = workflowInstance.WorkflowStatus
-            });
+            var response = await GetResponseWithNextTaskValues(workflowInstance);
+            return Ok(response);
         }
 
         [HttpGet("get-current-activity-values")]
         public async Task<IActionResult> GetCurrentActivityValues(string instanceId)
         {
             var workflowInstance = await _workflowInstanceStore.FindByIdAsync(instanceId);
-            var response = new BossResponse
-            {
-                InstanceId = instanceId,
-                Status = workflowInstance.WorkflowStatus
-            };
             if (workflowInstance.WorkflowStatus is WorkflowStatus.Cancelled or WorkflowStatus.Faulted or WorkflowStatus.Finished)
-                return Ok(response);
-
-            var currentActivityId = workflowInstance?.BlockingActivities.Select(i => i.ActivityId).First();
-
-            var workflowDefinition = await _workflowDefinitionStore.FindAsync(new WorkflowDefinitionIdSpecification(workflowInstance.DefinitionId).WithVersionOptions(VersionOptions.Latest));
-            var activityDefinition = workflowDefinition.Activities.First(a => a.ActivityId == currentActivityId);
-
-            object taskValues = null;
-            if (activityDefinition.Type == "UserTask")
-                taskValues = activityDefinition.Properties.ElementAt(0).Expressions["Json"];
-            else
-                taskValues = new
+                return Ok(new BossResponse
                 {
-                    RequiredFields = activityDefinition.Properties.First(p => p.Name == "RequiredFields").Expressions["Json"],
-                    Actions = activityDefinition.Properties.First(p => p.Name == "Actions").Expressions["Json"]
-                };
+                    InstanceId = instanceId,
+                    Status = workflowInstance.WorkflowStatus
+                });
 
-            response.Data = taskValues;
+            var response = await GetResponseWithNextTaskValues(workflowInstance);
 
             return Ok(response);
         }
@@ -118,7 +99,8 @@ namespace ElsaLatest.Controllers
             else
                 await _workflowInterruptor.InterruptActivityAsync(workflowInstance, currentActivity.ActivityId, userInput);
 
-            return Ok(new BossResponse { InstanceId = userInput.InstanceId, Status = workflowInstance.WorkflowStatus });
+            var result = await GetResponseWithNextTaskValues(workflowInstance);
+            return Ok(result);
         }
 
         [HttpGet("cancel-flow")]
@@ -135,6 +117,36 @@ namespace ElsaLatest.Controllers
             await dbContext.SaveChangesAsync();
 
             return Ok($"Cancelled workflow with id {instanceId}.");
+        }
+
+        private async Task<BossResponse> GetResponseWithNextTaskValues(WorkflowInstance workflowInstance)
+        {
+            var result = new BossResponse
+            {
+                InstanceId = workflowInstance.Id,
+                Status = workflowInstance.WorkflowStatus
+            };
+
+            if (workflowInstance.WorkflowStatus != WorkflowStatus.Suspended)
+                return result;
+
+            var currentActivityId = workflowInstance?.BlockingActivities.Select(i => i.ActivityId).First();
+
+            var workflowDefinition = await _workflowDefinitionStore.FindAsync(new WorkflowDefinitionIdSpecification(workflowInstance.DefinitionId).WithVersionOptions(VersionOptions.Latest));
+            var activityDefinition = workflowDefinition.Activities.First(a => a.ActivityId == currentActivityId);
+
+            object taskValues;
+            if (activityDefinition.Type == "UserTask")
+                taskValues = activityDefinition.Properties.ElementAt(0).Expressions["Json"];
+            else
+                taskValues = new
+                {
+                    RequiredFields = activityDefinition.Properties.First(p => p.Name == "RequiredFields").Expressions["Json"],
+                    Actions = activityDefinition.Properties.First(p => p.Name == "Actions").Expressions["Json"]
+                };
+
+            result.Data = taskValues;
+            return result;
         }
     }
 }
