@@ -39,9 +39,6 @@ namespace ElsaLatest
                     .AddWorkflowsFrom<Startup>()
 
                     .AddActivity<SqlQuery>()
-                    .AddActivity<GetLevel1Services>()
-                    .AddActivity<GetLevel2Services>()
-                    .AddActivity<GetTicketDetails>()
                     .AddActivity<UserInputTask>()
                 );
 

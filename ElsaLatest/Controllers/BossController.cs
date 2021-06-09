@@ -92,7 +92,7 @@ namespace ElsaLatest.Controllers
             if (!workflowInstance.BlockingActivities.Any())
                 return BadRequest("No blocked activities found to be executed in this instance.");
 
-            var currentActivity = workflowInstance?.BlockingActivities.Select(i => new { ActivityId = i.ActivityId, ActivityType = i.ActivityType }).First();
+            var currentActivity = workflowInstance?.BlockingActivities.Select(i => new { i.ActivityId, i.ActivityType }).First();
 
             if (currentActivity.ActivityType == "UserTask")
                 await _workflowInterruptor.InterruptActivityAsync(workflowInstance, currentActivity.ActivityId, userInput.UserAction);

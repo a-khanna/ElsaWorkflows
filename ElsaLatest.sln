@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElsaLatest", "ElsaLatest\ElsaLatest.csproj", "{AB4E3EC1-C7C0-40AB-A726-218277A2D95A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElsaGuides.ContentApproval.Web", "ElsaGuides.ContentApproval.Web\ElsaGuides.ContentApproval.Web.csproj", "{24827C97-2F56-4FEB-8B87-89E0BF353E17}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElsaLTS", "ElsaLTS\ElsaLTS.csproj", "{5802B34A-70A4-431F-BF66-855EECBEC66D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CDEC18C8-8794-4490-B56C-D8A78F6E0A79}"
 	ProjectSection(SolutionItems) = preProject
 		Readme.md = Readme.md
@@ -26,14 +22,6 @@ Global
 		{AB4E3EC1-C7C0-40AB-A726-218277A2D95A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB4E3EC1-C7C0-40AB-A726-218277A2D95A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB4E3EC1-C7C0-40AB-A726-218277A2D95A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24827C97-2F56-4FEB-8B87-89E0BF353E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24827C97-2F56-4FEB-8B87-89E0BF353E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24827C97-2F56-4FEB-8B87-89E0BF353E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24827C97-2F56-4FEB-8B87-89E0BF353E17}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5802B34A-70A4-431F-BF66-855EECBEC66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5802B34A-70A4-431F-BF66-855EECBEC66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5802B34A-70A4-431F-BF66-855EECBEC66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5802B34A-70A4-431F-BF66-855EECBEC66D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -41,6 +41,36 @@ namespace ElsaLatest.Activities
         /// The HTTP status code to return.
         /// </summary>
         [ActivityProperty(
+            UIHint = "db-providers",
+            Hint = "Db Provider.",
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript, SyntaxNames.Liquid }
+        )]
+        public string DbProvider { get; set; }
+
+        /// <summary>
+        /// The HTTP status code to return.
+        /// </summary>
+        [ActivityProperty(
+            UIHint = "databases",
+            Hint = "Database.",
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript, SyntaxNames.Liquid }
+        )]
+        public string Database { get; set; }
+
+        /// <summary>
+        /// The HTTP status code to return.
+        /// </summary>
+        [ActivityProperty(
+            UIHint = "db-schemas",
+            Hint = "Db Schema.",
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript, SyntaxNames.Liquid }
+        )]
+        public string DbSchema { get; set; }
+
+        /// <summary>
+        /// The HTTP status code to return.
+        /// </summary>
+        [ActivityProperty(
             UIHint = ActivityPropertyUIHints.Dropdown,
             Hint = "The HTTP status code to write.",
             Options = new[] { HttpStatusCode.OK, HttpStatusCode.Created, HttpStatusCode.Accepted, HttpStatusCode.NoContent, HttpStatusCode.Redirect, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Conflict },
